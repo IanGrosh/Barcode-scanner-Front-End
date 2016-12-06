@@ -6,7 +6,6 @@ from django.views.generic.base import View
 
 import json
 
-# Create your views here.
 from django.utils import timezone
 from questions.models import Question,Choice,Item,Location,Device,LocDev
 from django.views.decorators.csrf import csrf_exempt
@@ -15,7 +14,7 @@ from django.template import Context, loader
 from questions.CustomContainers import User,UserFactory,StatDeviceFactory
 from django.utils.decorators import method_decorator
 
-
+#Function to create JSON response. 
 def cors_json(resp):
 	print(resp)
 	r = JsonResponse(resp)
@@ -26,12 +25,6 @@ def cors_json(resp):
 
 @csrf_exempt
 def index(request):
-	# location = Location.objects.get(id=loc_pk)
-	# dev = StatDeviceFactory(loc_pk)
-	# things = {
-	# 'location': location,
-	# 'device' : dev,
-	# }
 	location_good = 0
 	location_bad = 0
 	item_good = 0
@@ -53,7 +46,6 @@ def index(request):
 	"location_bad":location_bad,
 	"item_good":item_good,
 	"item_bad":item_bad,
-	#"total": item_bad + item_good + location_bad + location_good,
 	}
 	return render(request,'questions/index.html',stuff)
 
@@ -61,9 +53,6 @@ def logout_view(request):
     logout(request)
     # Redirect to a success page.
 
-
-
-#@login_required
 def devices(request):
 	dev = list(Device.objects.all())
 	dev.sort()
@@ -127,14 +116,7 @@ def locationView(request,loc_pk):
 	}
 	return render(request, 'questions/location-view.html', things)
 
-#SETHS
-
-#URL TO POST DEVICE TO, creates questions there
-#GETDEVICES URL-> send key from DB.
-
-
-
-
+#Delete class is used to delete things from database. 
 @csrf_exempt
 def delete(request):
 	if request.method == 'POST':
@@ -143,16 +125,14 @@ def delete(request):
 			instance=Device.objects.get(id=int(received_json_data["device"]))
 			instance_barcode=instance.item_set.get(item_barcode_num=int(received_json_data["barcode"]))
 			instance_barcode.delete()
-			#delete
 		if "device" in received_json_data and "barcode" not in received_json_data:
 			instance=Device.objects.get(id=int(received_json_data["device"]))
 			instance.delete()
 		if "location" in received_json_data:
 			instance=Location.objects.get(id=int(received_json_data["location"]))
 			instance.delete()
-		return HttpResponse("Success, deleted: ")
-
-
+		return HttpResponse("Success, deleted. ")
+#To add a device run this function. Activated with API call. 
 @csrf_exempt
 def adddevice(request):
 	if request.method == 'POST':
@@ -171,11 +151,7 @@ def adddevice(request):
 			new_device.question_set.create(question_text=question)
 		new_device.save()
 		return HttpResponse("Sucess, id added is:" + str(new_device.id))
-
-
-
-
-#WHEN SETH WANTS THIS OD IT
+#Class used by web application to add a location
 @csrf_exempt
 def addlocation(request):
 	if request.method == 'POST':
@@ -185,32 +161,23 @@ def addlocation(request):
 		user_assigned=received_json_data["user_assigned"]
 		questions_for_loc_only=received_json_data["loc_questions"]
 		devices_to_add=received_json_data["devices_to_add"]
-
 		location=Location.objects.create(loc_barcode_num=loc_barcode, loc_name=loc_name, user_assigned=user_assigned)
-
 		for locquest in questions_for_loc_only:
 			location.question_set.create(question_text=locquest)
 		for device_id in devices_to_add:
-			print (device_id , "is device_id")
-			print(Device.objects.all(), "sfgsdf ", device_id)
-			print(int(device_id))
 			found_device=Device.objects.get(id=int(device_id))
-			print (found_device)
 			LocDev.objects.create(location=location, device=found_device) #Check me
 
 		return HttpResponse("Correct")
 
-
-
-
-#KYLES
+#Questions by user view. 
 @csrf_exempt
 def questionsbyuser(request):
 	if request.method == 'POST':
 		user=request.POST["user"]
 		filtered_items=Location.objects.all()
 		return cors_json({'data': map (Location.get_json_object, filtered_items)})
-
+#Adds answers. 
 @csrf_exempt
 def addanswers(request):
 	if request.method == 'POST':
@@ -226,9 +193,5 @@ def addanswers(request):
 				question_id=answer["question_id"]
 				question_entry=Question.objects.get(id=question_id)
 				loc_entry=Location.objects.get(id=loc_id)
-			else:
-				taco= "I am a note"
 			Choice.objects.create(choice_text=answer_text, person_scanned=user, time_scanned=time_answered, location=loc_entry, question=question_entry )
-			#question_entry.choice_set.create(choice_text=answer_text, person_scanned=user, time_scanned=time_answered)
-
 		return HttpResponse("Sucessful")

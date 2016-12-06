@@ -1,12 +1,11 @@
-KYLE- 
-
 To use this the data submitted needs to be in JSON for testing purposes use POSTMAN, raw coding, with JSON/Application Type.
 
-Seths URL is /questions/addlocation
+Web Application URL is /questions/addlocation
 
 
-Kyles URL is /questions/questionsbyuser
+Android Application URL is /questions/questionsbyuser
 #note this is not filtered
+
 
 
 
@@ -14,18 +13,18 @@ Below is example JSON.
 
 
 {
-	 	"loc_barcode_num": 56,
-		 	"items":
-			 		[
-					 			{
-									 			"barcode_num":20, "item_type":"A", "user_assigned": "nick", "admin":"ally",
-												 				"questions":
-																 					[
-																					 						"Is the fireeqtinguisher pin in place?", "is equipment red?"		
-																											 					]
-																																 			}
-																																			 		],
-																																					 	"loc_questions": ["Is the location clean?", "Is there two pieces of Equipment?"]
+	"loc_barcode_num": 56,
+		"items":
+			[
+			{
+				"barcode_num":20, "item_type":"A", "user_assigned": "nick", "admin":"ally",
+				"questions":
+					[
+					"Is the fireeqtinguisher pin in place?", "is equipment red?"		
+					]
+			}
+	],
+		"loc_questions": ["Is the location clean?", "Is there two pieces of Equipment?"]
 }
 
 

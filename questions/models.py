@@ -1,34 +1,18 @@
 '''
-A MARONE 09/22/2017
 All rights reserved.
 '''
-
 from __future__ import unicode_literals
 from django.db import models
 
-#when changing question models we need to run command python manage.py makemigrations polls
+#When changing question models we need to run command python manage.py makemigrations polls
 # and then python manage.py migrate
-
 '''
 TOP DOWN APPROACH
 '''
-
-
-
-#ADD JSON REPONSE WITH DJANGO
-
-
-
-#Question is here do we want admins assigned to locations,
-#like should locations be another class?
-#dont think we need.
-
-
-#MAKE THE BARCODE_NUM UNIQUE
 class Location(models.Model):
 	loc_barcode_num = models.CharField(max_length=200,default=" ", unique=True)
 	loc_name = models.CharField(max_length=200, default= " ")#floor1basement
-	admin = models.CharField(max_length=200) #should actually be payroll id
+	admin = models.CharField(max_length=200) 
 	user_assigned = models.CharField(max_length=200)
 
 	@property
@@ -55,6 +39,7 @@ class Location(models.Model):
 			except IndexError:
 				out &=False
 		return out
+	#used to get json object for responses. 
 	def get_json_object(self):
 		def access_lower_object_json(key):
 			return key.get_json_object()
@@ -84,7 +69,6 @@ class Device(models.Model):
 		ret={}
 		ret["device_name"]= self.device_name #example FEA
 		ret["manu"]=self.manufacturer
-		#ret["device_id"]=self.id # NOT NEEDED
 		ret["model_num"]= self.model_number
 		ret["type_equip"]= self.type_equip
 		ret["barcodes"]= map(str,self.item_set.all())
@@ -110,7 +94,7 @@ class LocDev(models.Model):
 							 null=True,
 							 on_delete=models.CASCADE)
 	def __str__(self):
-		return(" and locaction: " )#+ str(self.location_set.all()))
+		return(" and locaction: " )
 	def get_json_object(self):
 		ret={}
 		ret["locations"]=map(Location.get_json_object,Location.objects.all() )
@@ -124,7 +108,7 @@ class Item(models.Model):
 		def access_lower_object_json(key):
 			return key.get_json_object()
 		ret ={}
-		ret["barcode_num"]=self.item_barcode_num # needs to be set
+		ret["barcode_num"]=self.item_barcode_num 
 		return ret
 	def __str__(self):
 		return str(self.item_barcode_num)
@@ -141,7 +125,6 @@ class Question(models.Model):
 									 null=True)
 
 	def __nonzero__(self):
-
 		out = True
 		try:
 			ch = Choice.objects.filter(question=self,location=self.location_assoc).order_by('-time_scanned')[0]
@@ -157,10 +140,9 @@ class Question(models.Model):
 		return ret
 	def __str__(self):
 		return str((self.question_text, self.pk))
-
+#choice is a class to hold all answers. 
 class Choice(models.Model):
 	choice_text = models.CharField(max_length=200)
-	#This is going to be epoc time I want to ORDER BY Choice.time_scanned
 	time_scanned = models.IntegerField(default=0)
 	person_scanned = models.CharField(max_length=200, default= " ")
 	question= models.ForeignKey(Question,
