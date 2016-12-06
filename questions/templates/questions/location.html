@@ -11,7 +11,7 @@
         <span class="loc_id">{{loc.id}}</span>
         <a onclick="delete_location($(this))" href="javascript:void(0);" class="pull-right pad-left">Remove</a>
         <div class="col-sm-4">
-          <a class="loc" href="{% url 'questions:locationView' loc.id %}">{{loc.loc_name}}</a>
+          <a class="loc overflow" href="{% url 'questions:locationView' loc.id %}">{{loc.loc_name}}</a>
         </div>
         <span class="user_assigned">User Assigned: {{loc.user_assigned}}</span>
         <span class="glyphicon {% if loc %}glyphicon-ok{% else %}glyphicon-remove{% endif %} pull-right pad-top" aria-hidden="true"></span>
