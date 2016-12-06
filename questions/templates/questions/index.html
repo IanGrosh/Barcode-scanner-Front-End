@@ -12,22 +12,22 @@
     var pie = new d3pie("pieChart", {
         "size": {
             "canvasHeight": 600,
-            "canvasWidth": 750,
+            "canvasWidth": 1000,
             "pieOuterRadius": "58%"
         },
         "data": {
             "sortOrder": "label-asc",
             "content": [{
                 "label": "Passing Location Questions",
-                "value": {{location_good}},
+                "value": 14,
                 "color": "#31da6f"
             }, {
                 "label": "Failing Location Questions",
-                "value": {{location_bad}},
+                "value": 5,
                 "color": "#e61414"
             }, {
                 "label": "Passing Item Questions",
-                "value": {{item_good}},
+                "value": 0,
                 "color": "#48d74a"
             }, {
                 "label": "Failing Item Questions",
