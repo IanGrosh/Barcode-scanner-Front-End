@@ -52,7 +52,7 @@ class StatDeviceFactory(Modleiter):
         out = True
         for i in self.things:
             out &= i.__nonzero__()
-        return out        
+        return out
 
 class StatDevice(Modleiter):
     def __init__(self,device,ansers):
@@ -60,7 +60,7 @@ class StatDevice(Modleiter):
         self.questions = self.device.questions
         self.things = []
         for q in self.questions:
-            c = Choice.objects.filter(question=q).order_by('-time_scanned')
+            c = ansers.filter(question=q).order_by('-time_scanned')
             thing = Responce(q,c)
             self.things.append(thing)
     def __nonzero__(self):
