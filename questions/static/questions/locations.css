@@ -9,3 +9,10 @@
 .pad-top {
   padding-top: .11em;
 }
+
+.col-sm-4 a {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

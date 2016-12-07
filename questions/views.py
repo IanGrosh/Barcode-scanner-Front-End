@@ -34,11 +34,13 @@ def index(request):
 			location_good +=1
 		else:
 			location_bad +=1
-	for q in Question.objects.filter(location_assoc=None):
-		if q:
-			item_good +=1
-		else:
-			item_bad +=1
+	locks = Location.objects.all()
+	devs = [StatDeviceFactory(i.pk) for i in locks]
+	for i in devs:
+		for j in i:
+			item_good += j.yes
+			item_bad += j.no
+
 	stuff = {
 	"location_good":location_good,
 	"location_bad":location_bad,
